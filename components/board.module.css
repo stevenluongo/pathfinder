@@ -1,0 +1,10 @@
+.board {
+  background-color: orange;
+}
+
+.board td {
+  background-color: #fff;
+  width: 24px;
+  height: 24px;
+}
+/*# sourceMappingURL=board.module.css.map */
