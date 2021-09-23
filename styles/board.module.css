@@ -2,7 +2,15 @@
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
   padding: 1rem;
-  background-color: orange;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
 }
 
 .board {
@@ -17,11 +25,27 @@
   transition: background-color 0.35s ease;
 }
 
-.board .isStart {
-  background-color: green;
+.visualize {
+  background-color: #3f22c0;
+  position: absolute;
+  border: 0;
+  bottom: 1rem;
+  width: 200px;
+  height: 50px;
+  border-radius: 3px;
+  font-weight: 600;
+  color: #fff;
+  cursor: pointer;
+  -webkit-transition: -webkit-transform 0.35s ease;
+  transition: -webkit-transform 0.35s ease;
+  transition: transform 0.35s ease;
+  transition: transform 0.35s ease, -webkit-transform 0.35s ease;
+  -webkit-transform: scale(1);
+          transform: scale(1);
 }
 
-.board .isFinish {
-  background-color: red;
+.visualize:hover {
+  -webkit-transform: scale(1.015) translateY(-0.1rem);
+          transform: scale(1.015) translateY(-0.1rem);
 }
 /*# sourceMappingURL=board.module.css.map */

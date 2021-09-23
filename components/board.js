@@ -52,12 +52,16 @@ function Board() {
   const handleDikjstra = async() => {
     const start = board[startNode.row][startNode.col];
     const finish = board[finishNode.row][finishNode.col];
-    //fix dupe finish node
+    //fix dupe nodes
     board.forEach((row) => {
       row.forEach((node) => {
         if(node.isFinish) {
           if(node.row === finishNode.row && node.col === finishNode.col) return;
           node.isFinish = false
+        }
+        if(node.isStart) {
+          if(node.row === startNode.row && node.col === startNode.col) return;
+          node.isStart = false
         }
       })
     })
