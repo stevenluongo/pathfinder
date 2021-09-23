@@ -1,9 +1,0 @@
-{
-    "version": 3,
-    "mappings": "AAEA,AAAA,MAAM,CAAC;EACL,KAAK,EAHC,GAAG;CAIV",
-    "sources": [
-        "hello-world.module.scss"
-    ],
-    "names": [],
-    "file": "hello-world.module.css"
-}

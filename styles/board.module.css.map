@@ -1,0 +1,9 @@
+{
+    "version": 3,
+    "mappings": "AAAA,AAAA,MAAM,CAAC;EACL,gBAAgB,EAAE,MAAM;CAYzB;;AAbD,AAEE,MAFI,CAEJ,EAAE,CAAC;EACD,gBAAgB,EAAE,IAAI;EACtB,KAAK,EAAE,IAAI;EACX,MAAM,EAAE,IAAI;CACb;;AANH,AAOE,MAPI,CAOJ,QAAQ,CAAC;EACP,gBAAgB,EAAE,KAAK;CACxB;;AATH,AAUE,MAVI,CAUJ,SAAS,CAAC;EACR,gBAAgB,EAAE,GAAG;CACtB",
+    "sources": [
+        "board.module.scss"
+    ],
+    "names": [],
+    "file": "board.module.css"
+}

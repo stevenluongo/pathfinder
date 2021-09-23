@@ -1,11 +1,16 @@
 import React, {useEffect, useState} from 'react';
 import Node from './node';
-import styles from "./board.module.scss"
+import styles from "../styles/board.module.scss"
+import { dijkstra, getNodesInOrder } from '../algorithms/dijkstra';
+import { visualizeDijkstra, visualizePath, generateBoard } from '../lib/board';
 
-const DEFAULT_COLS = 20;
-const DEFAULT_ROWS = 40;
-const START_NODE = {col: 10, row: 10}
-const FINISH_NODE = {col: 8, row: 8}
+const DEFAULT_COLS = 50;
+const DEFAULT_ROWS = 20;
+const START_NODE = {col: 20, row: 10}
+const FINISH_NODE = {col: 5, row: 8}
+const BOARD_DEFAULTS = {
+  DEFAULT_COLS, DEFAULT_ROWS, START_NODE, FINISH_NODE
+}
 
 
 function Board() {
@@ -13,27 +18,23 @@ function Board() {
   const [board, setBoard] = useState([]);
 
   useEffect(() => {
-    generateNodes()
+    const board = generateBoard(BOARD_DEFAULTS)
+    setBoard(board)
   }, [])
 
-  const generateNodes = () => {
-    const tempBoard = []
-    for(let col = 0; col < DEFAULT_COLS; col++) {
-      let newRow = []
-      for(let row = 0; row< DEFAULT_ROWS; row++) {
-        const node = {
-          row: row,
-          col: col,
-          isStart: row === START_NODE.row && col === START_NODE.col,
-          isFinish: row === FINISH_NODE.row && col === FINISH_NODE.col,
-        }
-        newRow.push(node)
-      }
-      tempBoard.push(newRow);
-    }
-    setBoard(tempBoard);
-    console.log(tempBoard)
+
+
+  const handleDikjstra = async() => {
+    const start = board[START_NODE.row][START_NODE.col];
+    const finish = board[FINISH_NODE.row][FINISH_NODE.col];
+    const visitedSet = await dijkstra(start, finish, board);
+    console.log(visitedSet)
+    await visualizeDijkstra(visitedSet)
+    const nodesInOrder = getNodesInOrder(finish);
+    await visualizePath(nodesInOrder)
+
   }
+
   return (
     <>
     <h1>Board</h1>
@@ -44,10 +45,11 @@ function Board() {
           {row.map((node) => {
             return <Node key={`node-${node.row}-${node.col}`} {...node} />
           })}
-        </tr>
+          </tr>
       })}
       </tbody>
     </table>
+    <button onClick={handleDikjstra}>Visualize</button>
     </>
   )
 }

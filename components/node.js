@@ -1,7 +1,8 @@
 import React from 'react';
+import styles from "../styles/board.module.scss"
 
 function Node({row, col, isStart, isFinish}) {
-  return <td className={isStart ? 'start-node' : isFinish ? "isFinish" : "" }/>
+  return <td id={`node-${row}-${col}`} className={isStart ? styles.isStart : isFinish ? styles.isFinish : "" }/>
 }
 
 export default Node;

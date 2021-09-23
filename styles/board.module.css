@@ -7,4 +7,12 @@
   width: 24px;
   height: 24px;
 }
+
+.board .isStart {
+  background-color: green;
+}
+
+.board .isFinish {
+  background-color: red;
+}
 /*# sourceMappingURL=board.module.css.map */
