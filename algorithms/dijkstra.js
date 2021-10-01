@@ -1,37 +1,35 @@
-export const dijkstra = (START_NODE, FINISH_NODE, board) => {
-    return new Promise(resolve => {
-        const visitedSet = [];
-        const unvisitedSet = fillSet(board);
-        START_NODE.distance = 0;
+export const dijkstra = (START_NODE, FINISH_NODE, board) => new Promise(resolve => {
+    const visitedSet = [];
+    const unvisitedSet = fillSet(board);
+    START_NODE.distance = 0;
+    while(unvisitedSet.length) {
+        //sort nodes by distance
+        sortNodes(unvisitedSet);
+        //set target node to node with lowest distance
+        let targetNode = unvisitedSet.shift();
         
-        while(unvisitedSet.length) {
-            //sort nodes by distance
-            sortNodes(unvisitedSet);
-            //set target node to node with lowest distance
-            let targetNode = unvisitedSet.shift();
-            
-            if(targetNode.distance === Infinity) { 
-                resolve(visitedSet);
-                return;
-             }
-            
-            targetNode.isVisited = true;
-            
-            visitedSet.push(targetNode);
-            
-            if(targetNode.isWall) {
-                continue;
-            }
-            
-            if(targetNode === FINISH_NODE) {
-                resolve(visitedSet);
-                return;
-            }
-            
-            updateSet(targetNode, board);
+        if(targetNode.distance === Infinity) { 
+            resolve(visitedSet);
+            return;
         }
-    })
-}
+        
+        targetNode.isVisited = true;
+        
+        visitedSet.push(targetNode);
+        
+        if(targetNode.isWall) {
+            continue;
+        }
+        
+        if(targetNode === FINISH_NODE) {
+            resolve(visitedSet);
+            return;
+        }
+        
+        updateSet(targetNode, board);
+    }
+}) 
+
 
 
 const fillSet = (board) => {

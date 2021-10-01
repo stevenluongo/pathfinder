@@ -11,7 +11,9 @@
     background-color: #fff;
     width: 24px;
     height: 24px;
-    transition: background-color 0.35s ease;
+    transition: background-color 0.5s ease, transform 0.1s ease;
+    transform: scale(0.95);
+    border-radius: 1px;
   }
 }
 

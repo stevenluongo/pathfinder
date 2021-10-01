@@ -6,11 +6,15 @@ import { visualizeDijkstra, visualizePath, generateBoard } from '../lib/board';
 
 const DEFAULT_COLS = 50;
 const DEFAULT_ROWS = 20;
-const DEFAULT_START_NODE = {col: 10, row: 10}
-const DEFAULT_FINISH_NODE = {col: 5, row: 8}
+const DEFAULT_START_NODE = {col: 30, row: 12}
+const DEFAULT_FINISH_NODE = {col: 10, row: 8}
 const BOARD_DEFAULTS = {
   DEFAULT_COLS, DEFAULT_ROWS, DEFAULT_START_NODE, DEFAULT_FINISH_NODE
 }
+
+const delta = 6;
+let startX;
+let startY;
 
 
 function Board() {
@@ -24,13 +28,9 @@ function Board() {
   const [previousNode, setPreviousNode] = useState({});
 
   useEffect(() => {
-    const domEl = document.getElementById("board-wrap")
-    const availableWidth = domEl.offsetWidth - 50;
-    const availableHeight = domEl.offsetHeight - 50;
-    const cols = Math.floor(availableWidth / 27);
-    const rows = Math.floor(availableHeight / 27);
+    const {rows, cols} = fetchDimensions();
     const board = generateBoard(cols, rows, startNode, finishNode);
-    setDimensions({rows: rows, cols: cols});
+    setDimensions({rows, cols});
     setBoard(board)
 
     window.addEventListener("mousedown", handleMouseDown);
@@ -40,6 +40,15 @@ function Board() {
       window.removeEventListener("mouseup", handleMouseUp);
     }
   }, [])
+
+  const fetchDimensions = () => {
+    const domEl = document.getElementById("board-wrap")
+    const availableWidth = domEl.offsetWidth - 50;
+    const availableHeight = domEl.offsetHeight - 50;
+    const cols = Math.floor(availableWidth / 27);
+    const rows = Math.floor(availableHeight / 27);
+    return {cols, rows}
+  }
 
   const handleMouseDown = () => {
     setMouseDown(true)
@@ -68,7 +77,10 @@ function Board() {
     const visitedSet = await dijkstra(start, finish, board);
     await visualizeDijkstra(visitedSet)
     const nodesInOrder = getNodesInOrder(finish);
-    await visualizePath(nodesInOrder)
+    setTimeout(async() => {
+      await visualizePath(nodesInOrder)
+      
+    }, 250);
   }
 
   const resetBoard = () => {
@@ -86,13 +98,13 @@ function Board() {
   const updateNode = (target) => {
     const {isStart, isWall, isFinish, row, col} = target;
     const domEl = document.getElementById(`node-${row}-${col}`);
-    if(isStart) {
+    if(isStart && !isDragFinish) {
       setDragStart(true)
       setPreviousNode(domEl)
       return;
     }
 
-    if(isFinish) {
+    if(isFinish && !isDragStart) {
       setDragFinish(true);
       setPreviousNode(domEl);
       return;
@@ -123,30 +135,69 @@ function Board() {
     }
   }
 
-  const onDragEnd =(target) => {
-    const {row, col, isWall} = target;
-    const previousStartNode = board[startNode.col][startNode.row];
-    const previousFinishNode = board[finishNode.col][finishNode.row];
+  const onDragEnd =(evt, target) => {
+
+    //check to see whether user dragged
+    const diffX = Math.abs(evt.pageX - startX);
+    const diffY = Math.abs(evt.pageY - startY);
+  
+    if (diffX < delta && diffY < delta) {
+      //if user clicks
+      return;
+    } 
+
+    const {row, col, isWall, isStart, isFinish} = target;
+    const previousStartNode = board[startNode.row][startNode.col];
+    const previousFinishNode = board[finishNode.row][finishNode.col];
+
+    const startDomEl = document.getElementById(`node-${startNode.row}-${startNode.col}`);
+    const finishDomEl = document.getElementById(`node-${finishNode.row}-${finishNode.col}`);
+
+    //do nothing if target is a wall
     if(isWall) {
       if(isDragStart) {
         setTimeout(() => {
-          document.getElementById(`node-${startNode.row}-${startNode.col}`).classList.add("node-start")
+          startDomEl.classList.add("node-start")
         }, 500);
       }
       if(isDragFinish) {
         setTimeout(() => {
-          document.getElementById(`node-${finishNode.row}-${finishNode.col}`).classList.add("node-finish")
+          finishDomEl.classList.add("node-finish")
         }, 500);
       }
       return;
     }
+
+    //update new start node
     if(isDragStart) {
+      //if user lands on the finish node
+      if(isFinish) {
+        setTimeout(() => {
+          startDomEl.classList.add("node-start");
+          previousNode.classList.remove('node-start')
+        }, 500);
+        setPreviousNode(null);
+        setDragStart(false);
+        return;
+      }
       previousStartNode.isStart = false;
       target.isStart = true;
       setStartNode({col, row})
       setDragStart(false);
     }
+
+    //update new finish node
     if(isDragFinish) {
+      //if user lands on start node
+      if(isStart) {
+        setTimeout(() => {
+          finishDomEl.classList.add('node-finish')
+          previousNode.classList.remove('node-finish')
+        }, 500);
+        setPreviousNode(null)
+        setDragFinish(false);
+        return;
+      }
       previousFinishNode.isFinish = false;
       target.isFinish = true;
       setFinishNode({col, row})

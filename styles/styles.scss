@@ -18,7 +18,13 @@ input {
   font-size: inherit;
 }
 
-h1, h2, h3, h4, h5, h6, p {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
   margin: 0;
 }
 
@@ -30,13 +36,43 @@ h1, h2, h3, h4, h5, h6, p {
 }
 
 .node-visited {
-  background-color: #246cca !important;
+  animation-name: fadeIn;
+  animation-duration: 1s;
+  animation-fill-mode: forwards;
 }
 
 .node-path {
-  background-color: #fcff48 !important;
+  animation-name: fadePath;
+  animation-duration: 1s;
+  animation-fill-mode: forwards;
 }
 
 .node-wall {
   background-color: #003549 !important;
+}
+
+@keyframes fadeIn {
+  from {
+    border-radius: 50px;
+    transform: scale(0.1);
+    background-color: purple;
+  }
+
+  to {
+    border-radius: 1px;
+    transform: scale(1);
+    background-color: #246cca;
+  }
+}
+
+@keyframes fadePath {
+  from {
+    background-color: orange;
+    transform: scale(0.95);
+  }
+
+  to {
+    background-color: #fcff48;
+    transform: scale(1.15);
+  }
 }
