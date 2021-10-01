@@ -7,10 +7,7 @@
     Find the shortest path between a set of nodes using pathfinding algorithms
     <br />
     <br />
-    <br />
-    ·
-    <a target="_blank" rel="noopener noreferrer" href="https://agile-fortress-24354.herokuapp.com/pathfinder">View Project</a>
-    ·
+    <a target="_blank" rel="noopener noreferrer" href="https://main.d2mc6gq8ovxyln.amplifyapp.com/">Live Demo</a>
   </p>
 </p>
 
