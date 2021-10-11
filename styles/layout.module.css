@@ -1,7 +1,0 @@
-.layout {
-  display: -ms-grid;
-  display: grid;
-  -ms-grid-columns: 1fr 200px;
-      grid-template-columns: 1fr 200px;
-}
-/*# sourceMappingURL=layout.module.css.map */
