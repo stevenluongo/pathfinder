@@ -29,7 +29,10 @@ function Board() {
 
   useEffect(() => {
     const {rows, cols} = fetchDimensions();
+    console.log(rows, cols)
     const board = generateBoard(cols, rows, startNode, finishNode);
+
+    console.log(board)
     setDimensions({rows, cols});
     setBoard(board)
 
