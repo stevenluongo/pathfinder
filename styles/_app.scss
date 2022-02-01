@@ -13,7 +13,7 @@
     flex-direction: column;
     align-items: flex-end;
     .app_topbar {
-        height: 60px;
+        height: 73px;
         width: calc(100% - 4px);
         background-color: #1d1d1d;
         border-bottom-left-radius: 5px;
@@ -145,4 +145,8 @@
       font-size: 1.25em;
       color: #3f3f3f !important;
     }
+}
+
+.MuiSvgIcon-root {
+    color: rgb(80, 80, 80);
 }

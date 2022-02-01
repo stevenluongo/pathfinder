@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useGlobalContext } from '../context/global-context';
 import Board from './board';
 import SideNav from './sidenav';
+import TopNav from './topnav';
 
 function Layout () {
     return (
@@ -11,7 +12,7 @@ function Layout () {
             </div>
             <div className='app_body'>
                 <div className='app_topbar'>
-                    <p>ello</p>
+                    <TopNav/>
                 </div>
                 <div className='app_content'>
                     <Board/>

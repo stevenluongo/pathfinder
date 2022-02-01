@@ -25,10 +25,12 @@ function Board() {
   const [isDragStart, setDragStart] = useState(false);
   const [isDragFinish, setDragFinish] = useState(false);
   const [previousNode, setPreviousNode] = useState({});
+  const [boardWidth, setBoardWidth] = useState(0);
 
   useEffect(() => {
-    const {rows, cols} = fetchDimensions();
+    const {rows, cols, availableWidth} = fetchDimensions();
     const board = generateBoard(cols, rows, startNode, finishNode);
+    setBoardWidth(availableWidth);
 
     setDimensions({rows, cols});
     setBoard(board)
@@ -47,7 +49,8 @@ function Board() {
     const availableHeight = domEl.offsetHeight - 50;
     const cols = Math.floor(availableWidth / 27);
     const rows = Math.floor(availableHeight / 27);
-    return {cols, rows}
+    console.log(availableWidth)
+    return {cols, rows, availableWidth}
   }
 
   const handleMouseDown = () => {
@@ -218,7 +221,9 @@ function Board() {
         })}
         </tbody>
       </table>
-      <button className='visualize' onClick={handleDikjstra}>visualize</button>
+      <div className='board_button_wrapper' style={{width: boardWidth && boardWidth}}>
+        <button className='visualize' onClick={handleDikjstra}>visualize</button>
+      </div>
     </div>
   )
 }
