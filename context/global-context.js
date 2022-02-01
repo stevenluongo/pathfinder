@@ -6,7 +6,7 @@ export function useGlobalContext() {
     return useContext(GlobalContext);
 }
 
-const DEFAULT_COLORS = {start: '#55ce96', finish: '#f15b47', wall: "#003549"};
+const DEFAULT_COLORS = {start: '#956edd', finish: '#73f2b0', wall: "#003549"};
 
 
 export function GlobalContextProvider({children}) {
