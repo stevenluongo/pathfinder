@@ -5,13 +5,12 @@ import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import UpcomingIcon from '@mui/icons-material/Upcoming';
 import EggIcon from '@mui/icons-material/Egg';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
-
-const DEFAULT_COLORS = {start: '#55ce96', finish: '#f15b47', wall: "#003549"};
+import { useGlobalContext } from '../context/global-context';
+import useOnClickOutside from "../lib/useOnClickOutside";
 
 export default function SideNav() {
     const [isOpen, setIsOpen] = useState(true);
     const [appearance, setAppearance] = useState(true);
-    const [colors, setColors] = useState(DEFAULT_COLORS);
     const startRef = useRef(null);
     const finishRef = useRef(null);
     const wallRef = useRef(null);
@@ -30,54 +29,73 @@ export default function SideNav() {
                 </div>
             </Dropdown>
             <Dropdown label="appearance" icon={<UpcomingIcon/>} isOpen={appearance} onClick={() => setAppearance(!appearance)}>
-                <ColorInput default_color={DEFAULT_COLORS.start} label="START NODE COLOR" colors={colors} ref={startRef} value={colors.start} updateColors={setColors} target="start"/>
-                <ColorInput default_color={DEFAULT_COLORS.finish} label="FINISH NODE COLOR" colors={colors} ref={finishRef} value={colors.finish} updateColors={setColors} target="finish"/>
-                <ColorInput margin={0} default_color={DEFAULT_COLORS.wall} label="WALL NODE COLOR" colors={colors} ref={wallRef} value={colors.wall} updateColors={setColors} target="wall"/>
+                <ColorInput  label="START NODE COLOR" ref={startRef} target="start"/>
+                <ColorInput  label="FINISH NODE COLOR" ref={finishRef} target="finish"/>
+                <ColorInput margin={0} label="WALL NODE COLOR" ref={wallRef} target="wall"/>
             </Dropdown>
         </div>
     </>);
 }
 
-const ColorInput = React.forwardRef(({margin, label, value, default_color, target, updateColors, colors}, ref) => {
+const ColorInput = React.forwardRef(({margin, label, target}, ref) => {
+    const [isOpen, setIsOpen] = useState(false)
+    const {setColors, colors, loaded, DEFAULT_COLORS} = useGlobalContext();
+    const [localColors, setLocalColors] = useState(colors);
+
+    const listenForClose = () => {
+        if(isOpen) {
+            setIsOpen(false);
+            //update local storage
+            setColors(localColors)
+            localStorage.setItem('appearance_colors', JSON.stringify(localColors));
+        }
+        
+    }
+
+    useOnClickOutside(ref, listenForClose);
+
     const handleColorChange = (e) => {
         const mutatedState = {
           ...colors,
           [target] : e.target.value
         }
-    
-        updateColors(mutatedState);
+        setLocalColors(mutatedState);
     }
-    return (
+
+    const handleClick = (e) => {
+        if(e.target.name !== target) {
+            if(e.target.id === '#restart') {
+            //format updated colors
+            const updatedColor = {
+                name: target, value: DEFAULT_COLORS[target]
+            }
+            const updatedState = {
+                ...colors,
+                [updatedColor.name] : updatedColor.value
+            }
+
+            //update localstorage & state
+            localStorage.setItem('appearance_colors', JSON.stringify(updatedState));
+            
+            handleColorChange({target: updatedColor});
+            return;
+            }
+            ref.current.click();
+            setIsOpen(true);
+        }
+    }
+
+    return loaded && (
         <div className='a_s_b_d_color' style={{marginBottom: margin && margin}}>
             <h6>{label}</h6>
-            <div className="a_s_b_d_c_input" onClick={(e) => {
-                if(e.target.name !== target) {
-                    if(e.target.id === '#restart') {
-                    //format updated colors
-                    const updatedColor = {
-                        name: target, value: default_color
-                    }
-                    const updatedState = {
-                        ...colors,
-                        [updatedColor.name] : updatedColor.value
-                    }
-
-                    //update localstorage & state
-                    localStorage.setItem('appearance_colors', JSON.stringify(updatedState));
-                    
-                    handleColorChange({target: updatedColor});
-                    return;
-                    }
-                    ref.current.click();
-                }
-            }}>
+            <div className="a_s_b_d_c_input" onClick={handleClick}>
                 <span style={{display: 'flex', alignItems: 'center'}}>
-                    <EggIcon style={{fill: value}}/>
-                    <p>{value}</p>
+                    <EggIcon style={{fill: colors[target]}}/>
+                    <p>{colors[target]}</p>
                 </span>
                 <RestartAltIcon style={{fontSize: '1.2em'}}/>
                 <div id='#restart' className='placeholder' />
-                <input name={target} value={value} ref={ref} onChange={handleColorChange} type="color" style={{position: 'absolute', right: 0, zIndex: -1}}/>
+                <input name={target} value={colors[target]} ref={ref} onChange={handleColorChange} type="color" style={{position: 'absolute', right: 0, zIndex: -1}}/>
             </div>
     </div>
 )});

@@ -1,0 +1,86 @@
+.board_wrap {
+    box-sizing: border-box;
+    padding: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+  }
+  .board {
+    background-color: #0a0a0a;
+    td {
+      background-color: rgb(24, 24, 24);
+      width: 24px;
+      height: 24px;
+      transition: background-color 0.5s ease, transform 0.1s ease;
+      transform: scale(0.95);
+      border-radius: 1px;
+    }
+  }
+  
+  .visualize {
+    background-color: #3f22c0;
+    position: absolute;
+    border: 0;
+    bottom: 1rem;
+    width: 200px;
+    height: 50px;
+    border-radius: 3px;
+    font-weight: 600;
+    color: #fff;
+    cursor: pointer;
+    transition: transform 0.35s ease;
+    transform: scale(1);
+    &:hover {
+      transform: scale(1.015) translateY(-0.1rem);
+    }
+  }
+  
+  .node-start {
+    background-color: rgb(85, 206, 150) !important;
+  }
+  .node-finish {
+    background-color: rgb(241, 91, 71) !important;
+  }
+  
+  .node-visited {
+    animation-name: fadeIn;
+    animation-duration: 1s;
+    animation-fill-mode: forwards;
+  }
+  
+  .node-path {
+    animation-name: fadePath;
+    animation-duration: 1s;
+    animation-fill-mode: forwards;
+  }
+  
+  .node-wall {
+    background-color: #003549 !important;
+  }
+  
+  @keyframes fadeIn {
+    from {
+      border-radius: 50px;
+      transform: scale(0.1);
+      background-color: purple;
+    }
+  
+    to {
+      border-radius: 1px;
+      transform: scale(1);
+      background-color: #246cca;
+    }
+  }
+  
+  @keyframes fadePath {
+    from {
+      background-color: orange;
+      transform: scale(0.95);
+    }
+  
+    to {
+      background-color: #fcff48;
+      transform: scale(1.15);
+    }
+  }

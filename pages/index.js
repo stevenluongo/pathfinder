@@ -1,5 +1,10 @@
 import Layout from '../components/layout'
+import { GlobalContextProvider } from '../context/global-context'
 
 export default function Home() {
-  return <Layout/>
+  return (
+    <GlobalContextProvider>
+      <Layout/>
+    </GlobalContextProvider>
+  )
 }

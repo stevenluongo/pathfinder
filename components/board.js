@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from 'react';
 import Node from './node';
-import styles from "../styles/board.module.scss"
 import { dijkstra, getNodesInOrder } from '../algorithms/dijkstra';
 import { visualizeDijkstra, visualizePath, generateBoard } from '../lib/board';
 
@@ -29,10 +28,8 @@ function Board() {
 
   useEffect(() => {
     const {rows, cols} = fetchDimensions();
-    console.log(rows, cols)
     const board = generateBoard(cols, rows, startNode, finishNode);
 
-    console.log(board)
     setDimensions({rows, cols});
     setBoard(board)
 
@@ -209,8 +206,8 @@ function Board() {
   }
 
   return (
-    <div className={styles.wrap} id="board-wrap">
-      <table className={styles.board}>
+    <div className='board_wrap' id="board-wrap">
+      <table className='board'>
         <tbody>
         {board && board.map((row, idx) => {
           return <tr key={`row-${idx}`}>
@@ -221,7 +218,7 @@ function Board() {
         })}
         </tbody>
       </table>
-      <button className={styles.visualize} onClick={handleDikjstra}>visualize</button>
+      <button className='visualize' onClick={handleDikjstra}>visualize</button>
     </div>
   )
 }
