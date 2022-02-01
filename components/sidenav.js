@@ -76,8 +76,13 @@ const ColorInput = React.forwardRef(({margin, label, target}, ref) => {
 
             //update localstorage & state
             localStorage.setItem('appearance_colors', JSON.stringify(updatedState));
-            
-            handleColorChange({target: updatedColor});
+
+            const mutatedState = {
+                ...colors,
+                [target]: DEFAULT_COLORS[target]
+            }
+
+            setColors(mutatedState)
             return;
             }
             ref.current.click();
