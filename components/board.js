@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import Node from './node';
 import { dijkstra, getNodesInOrder } from '../algorithms/dijkstra';
 import { visualizeDijkstra, visualizePath, generateBoard } from '../lib/board';
+import { useGlobalContext } from '../context/global-context';
 
 const DEFAULT_COLS = 50;
 const DEFAULT_ROWS = 20;
@@ -27,6 +28,8 @@ function Board() {
   const [previousNode, setPreviousNode] = useState({});
   const [boardWidth, setBoardWidth] = useState(0);
 
+  const {speed} = useGlobalContext();
+
   useEffect(() => {
     const {rows, cols, availableWidth} = fetchDimensions();
     const board = generateBoard(cols, rows, startNode, finishNode);
@@ -45,8 +48,8 @@ function Board() {
 
   const fetchDimensions = () => {
     const domEl = document.getElementById("board-wrap")
-    const availableWidth = domEl.offsetWidth - 50;
-    const availableHeight = domEl.offsetHeight - 50;
+    const availableWidth = domEl.offsetWidth - 30;
+    const availableHeight = domEl.offsetHeight - 30;
     const cols = Math.floor(availableWidth / 27);
     const rows = Math.floor(availableHeight / 27);
     console.log(availableWidth)
@@ -78,7 +81,7 @@ function Board() {
       })
     })
     const visitedSet = await dijkstra(start, finish, board);
-    await visualizeDijkstra(visitedSet)
+    await visualizeDijkstra(visitedSet, speed)
     const nodesInOrder = getNodesInOrder(finish);
     setTimeout(async() => {
       await visualizePath(nodesInOrder)
@@ -221,9 +224,7 @@ function Board() {
         })}
         </tbody>
       </table>
-      <div className='board_button_wrapper' style={{width: boardWidth && boardWidth}}>
         <button className='visualize' onClick={handleDikjstra}>visualize</button>
-      </div>
     </div>
   )
 }

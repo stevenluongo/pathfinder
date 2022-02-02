@@ -12,6 +12,7 @@ const DEFAULT_COLORS = {start: '#956edd', finish: '#73f2b0', wall: "#003549"};
 export function GlobalContextProvider({children}) {
     const [colors, setColors] = useState(DEFAULT_COLORS);
     const [loaded, setLoaded] = useState(false);
+    const [speed, setSpeed] = useState(6);
 
     const fetchColors = async() => {
         const local_data = await JSON.parse(localStorage.getItem('appearance_colors'));
@@ -35,7 +36,9 @@ export function GlobalContextProvider({children}) {
         setColors,
         DEFAULT_COLORS,
         loaded,
-        setLoaded
+        setLoaded,
+        speed,
+        setSpeed
     }
     return (
         <GlobalContext.Provider value={value}>

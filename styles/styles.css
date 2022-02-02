@@ -210,12 +210,17 @@
 .board_wrap {
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
+  padding: 1rem;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
   height: 100%;
-  padding: 1.5rem;
-  position: relative;
 }
 
 .board {
@@ -235,23 +240,11 @@
   border-radius: 1px;
 }
 
-.board_button_wrapper {
-  position: absolute;
-  width: inherit;
-  width: 100%;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
-  bottom: 1rem;
-  left: 1.5rem;
-}
-
 .visualize {
   background-color: #3f22c0;
+  position: absolute;
   border: 0;
+  bottom: 1rem;
   width: 200px;
   height: 50px;
   border-radius: 3px;
@@ -309,7 +302,7 @@
     background-color: purple;
   }
   to {
-    border-radius: 1px;
+    border-radius: 2px;
     -webkit-transform: scale(1);
             transform: scale(1);
     background-color: #246cca;
@@ -324,7 +317,7 @@
     background-color: purple;
   }
   to {
-    border-radius: 1px;
+    border-radius: 2px;
     -webkit-transform: scale(1);
             transform: scale(1);
     background-color: #246cca;

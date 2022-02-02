@@ -7,13 +7,24 @@ import EggIcon from '@mui/icons-material/Egg';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import { useGlobalContext } from '../context/global-context';
 import useOnClickOutside from "../lib/useOnClickOutside";
+import BoltIcon from '@mui/icons-material/Bolt';
+import Stack from '@mui/material/Stack';
+import Slider from '@mui/material/Slider';
 
 export default function SideNav() {
     const [isOpen, setIsOpen] = useState(true);
     const [appearance, setAppearance] = useState(true);
+    const [speedToggled, setSpeedToggled] = useState(true);
     const startRef = useRef(null);
     const finishRef = useRef(null);
     const wallRef = useRef(null);
+    const {setSpeed} = useGlobalContext();
+    const [value, setValue] = useState(-6);
+
+    const handleSliderChange = (event, newValue) => {
+        setValue(newValue);
+        console.log(newValue)
+    };
 
     return (<>
         <div className='a_s_head'>
@@ -28,9 +39,14 @@ export default function SideNav() {
                     <p style={{marginBottom: 0}}>Wall Node</p>
                 </div>
             </Dropdown>
+            <Dropdown label="speed" icon={<BoltIcon/>} isOpen={speedToggled} onClick={() => setSpeedToggled(!speedToggled)}>
+                <Stack spacing={2} direction="row" sx={{m: '.5rem .5rem' }} alignItems="center">
+                        <Slider min={-12} max={-2} onBlur={() => setSpeed(Math.abs(value))} aria-label="Volume" value={value} onChange={handleSliderChange} />
+                </Stack>
+            </Dropdown>
             <Dropdown label="appearance" icon={<UpcomingIcon/>} isOpen={appearance} onClick={() => setAppearance(!appearance)}>
-                <ColorInput  label="START NODE COLOR" ref={startRef} target="start"/>
-                <ColorInput  label="FINISH NODE COLOR" ref={finishRef} target="finish"/>
+                <ColorInput label="START NODE COLOR" ref={startRef} target="start"/>
+                <ColorInput label="FINISH NODE COLOR" ref={finishRef} target="finish"/>
                 <ColorInput margin={0} label="WALL NODE COLOR" ref={wallRef} target="wall"/>
             </Dropdown>
         </div>
@@ -122,3 +138,4 @@ const Dropdown = ({icon, label, isOpen, onClick, children}) => {
         </div>
     )
 }
+  

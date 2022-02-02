@@ -3,8 +3,30 @@ import Select from '@mui/material/Select';
 import { useState } from 'react';
 import { styled } from '@mui/material/styles';
 import InputBase from '@mui/material/InputBase';
-import AlignVerticalCenterIcon from '@mui/icons-material/AlignVerticalCenter';
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
+
+export default function TopNav() {
+    const [algorithm, setAlgorithm] = useState(10);
+
+    const handleChange = (event) => {
+        setAlgorithm(event.target.value);
+    };
+    return (
+        <div style={{display: 'flex', alignItems: 'center', height: '100%'}}>
+        <Select
+          labelId="demo-customized-select-label"
+          id="demo-customized-select"
+          value={algorithm}
+          onChange={handleChange}
+          input={<BootstrapInput />}
+          style={{width: 150, marginLeft: '1rem'}}
+        >
+          <MenuItem style={{display: 'flex', alignItems: 'center'}} value={10}><AutoAwesomeIcon style={{marginRight: '.5rem', fontSize: '1.3em'}}/>Dijkstra</MenuItem>
+        </Select>
+        </div>
+    );
+}
+
 const BootstrapInput = styled(InputBase)(({ theme }) => ({
     'label + &': {
       marginTop: theme.spacing(3),
@@ -40,24 +62,3 @@ const BootstrapInput = styled(InputBase)(({ theme }) => ({
       },
     },
   }));
-
-export default function TopNav() {
-    const [age, setAge] = useState(10);
-    const handleChange = (event) => {
-        setAge(event.target.value);
-    };
-    return (
-        <div style={{display: 'flex', alignItems: 'center', height: '100%'}}>
-        <Select
-          labelId="demo-customized-select-label"
-          id="demo-customized-select"
-          value={age}
-          onChange={handleChange}
-          input={<BootstrapInput />}
-          style={{width: 150, marginLeft: 'calc(1.5rem - 5px)'}}
-        >
-          <MenuItem style={{display: 'flex', alignItems: 'center'}} value={10}><AutoAwesomeIcon style={{marginRight: '.5rem', fontSize: '1.3em'}}/>Dijkstra</MenuItem>
-        </Select>
-        </div>
-    );
-}
