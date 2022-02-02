@@ -1,5 +1,5 @@
 import Collapse from '@mui/material/Collapse';
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import LayersIcon from '@mui/icons-material/Layers';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import UpcomingIcon from '@mui/icons-material/Upcoming';
@@ -18,15 +18,26 @@ export default function SideNav() {
     const startRef = useRef(null);
     const finishRef = useRef(null);
     const wallRef = useRef(null);
-    const {setSpeed} = useGlobalContext();
-    const [value, setValue] = useState(-6);
+    const {setSpeed, speed, loaded, isAnimating} = useGlobalContext();
+    const [value, setValue] = useState(null);
+
+    useEffect(() => {
+        if(loaded) {
+            setValue(-Math.abs(speed))
+        }
+    }, [loaded])
 
     const handleSliderChange = (event, newValue) => {
         setValue(newValue);
-        console.log(newValue)
     };
 
-    return (<>
+    const updateSpeed = () => {
+        setSpeed(Math.abs(value));
+        //update localStorage
+        localStorage.setItem('speed', Math.abs(value));
+    }
+
+    return value !== null && (<>
         <div className='a_s_head'>
             <img src="https://res.cloudinary.com/dxqmbhsis/image/upload/v1643654043/pathfinder/logo_jk8fyj.png"/>
             <h3>pathfindr</h3>
@@ -41,7 +52,7 @@ export default function SideNav() {
             </Dropdown>
             <Dropdown label="speed" icon={<BoltIcon/>} isOpen={speedToggled} onClick={() => setSpeedToggled(!speedToggled)}>
                 <Stack spacing={2} direction="row" sx={{m: '.5rem .5rem' }} alignItems="center">
-                        <Slider min={-12} max={-2} onBlur={() => setSpeed(Math.abs(value))} aria-label="Volume" value={value} onChange={handleSliderChange} />
+                        <Slider disabled={isAnimating} min={-12} max={-2} onBlur={updateSpeed} aria-label="Volume" value={value} onChange={handleSliderChange} />
                 </Stack>
             </Dropdown>
             <Dropdown label="appearance" icon={<UpcomingIcon/>} isOpen={appearance} onClick={() => setAppearance(!appearance)}>

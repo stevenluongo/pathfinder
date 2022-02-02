@@ -13,11 +13,19 @@ export function GlobalContextProvider({children}) {
     const [colors, setColors] = useState(DEFAULT_COLORS);
     const [loaded, setLoaded] = useState(false);
     const [speed, setSpeed] = useState(6);
+    const [isAnimating, setIsAnimating] = useState(false);
+
+    const fetchSpeed = async() => {
+        const local_data = await JSON.parse(localStorage.getItem('speed'));
+        if(local_data) {
+            setSpeed(local_data);
+            return;
+        }
+    }
 
     const fetchColors = async() => {
         const local_data = await JSON.parse(localStorage.getItem('appearance_colors'));
         if(local_data) {
-            console.log(local_data);
             setColors(local_data)
             return;
         }
@@ -26,6 +34,7 @@ export function GlobalContextProvider({children}) {
     useEffect(() => {
         const loadApp = async () => {
             await fetchColors();
+            await fetchSpeed();
             setLoaded(true)
         }
         loadApp();
@@ -38,7 +47,9 @@ export function GlobalContextProvider({children}) {
         loaded,
         setLoaded,
         speed,
-        setSpeed
+        setSpeed,
+        isAnimating,
+        setIsAnimating
     }
     return (
         <GlobalContext.Provider value={value}>

@@ -28,7 +28,7 @@ function Board() {
   const [previousNode, setPreviousNode] = useState({});
   const [boardWidth, setBoardWidth] = useState(0);
 
-  const {speed} = useGlobalContext();
+  const {speed, setIsAnimating} = useGlobalContext();
 
   useEffect(() => {
     const {rows, cols, availableWidth} = fetchDimensions();
@@ -52,7 +52,6 @@ function Board() {
     const availableHeight = domEl.offsetHeight - 30;
     const cols = Math.floor(availableWidth / 27);
     const rows = Math.floor(availableHeight / 27);
-    console.log(availableWidth)
     return {cols, rows, availableWidth}
   }
 
@@ -65,6 +64,7 @@ function Board() {
 
 
   const handleDikjstra = async() => {
+    setIsAnimating(true)
     const start = board[startNode.row][startNode.col];
     const finish = board[finishNode.row][finishNode.col];
     //fix dupe nodes
@@ -85,8 +85,9 @@ function Board() {
     const nodesInOrder = getNodesInOrder(finish);
     setTimeout(async() => {
       await visualizePath(nodesInOrder)
-      
+      setIsAnimating(false);  
     }, 250);
+
   }
 
   const resetBoard = () => {
