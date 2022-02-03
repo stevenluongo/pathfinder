@@ -15,11 +15,11 @@ export default function SideNav() {
     const [isOpen, setIsOpen] = useState(true);
     const [appearance, setAppearance] = useState(true);
     const [speedToggled, setSpeedToggled] = useState(true);
+    const [value, setValue] = useState(null);
+    const {isProcessingMode, previousFinishNode, setPreviousFinishNode, finishNode, board, setSpeed, speed, loaded, isAnimating, setMode, mode, colors, setPreviousStartNode, previousStartNode, startNode, setStartNode} = useGlobalContext();
     const startRef = useRef(null);
     const finishRef = useRef(null);
     const wallRef = useRef(null);
-    const {setSpeed, speed, loaded, isAnimating} = useGlobalContext();
-    const [value, setValue] = useState(null);
 
     useEffect(() => {
         if(loaded) {
@@ -37,6 +37,57 @@ export default function SideNav() {
         localStorage.setItem('speed', Math.abs(value));
     }
 
+    const updateMode = (target) => {
+        if(isAnimating || isProcessingMode) {
+            return;
+        }
+        if(target === 'start') {
+            if(previousStartNode && previousStartNode === startNode) {
+                //loop through all nodes and remove them if they have the start node color
+                board.forEach((tempRow) => {
+                    tempRow.forEach((node) => {
+                        if(node.isWall || node.isFinish) {
+                            return;
+                        }
+                        const tempDomEl = document.getElementById(`node-${node.row}-${node.col}`);
+                        if(tempDomEl.style.backgroundColor === hexToRgb(colors.start)) {
+                            tempDomEl.style.background = '#181818';
+                        }
+                    })
+                })
+                
+                //update old start node styles
+                const domEl = document.getElementById(`node-${startNode.row}-${startNode.col}`);
+                domEl.style.backgroundColor = colors.start;
+
+            }
+            setPreviousStartNode(startNode);
+        }
+        if(target === 'finish') {
+            if(previousFinishNode && previousFinishNode === finishNode) {
+                //loop through all nodes and remove them if they have the start node color
+                board.forEach((tempRow) => {
+                    tempRow.forEach((node) => {
+                        if(node.isWall || node.isStart) {
+                            return;
+                        }
+                        const tempDomEl = document.getElementById(`node-${node.row}-${node.col}`);
+                        if(tempDomEl.style.backgroundColor === hexToRgb(colors.finish)) {
+                            tempDomEl.style.background = '#181818';
+                        }
+                    })
+                })
+                
+                //update old start node styles
+                const domEl = document.getElementById(`node-${finishNode.row}-${finishNode.col}`);
+                domEl.style.backgroundColor = colors.finish;
+
+            }
+            setPreviousFinishNode(finishNode);
+        }
+        setMode({start: false, finish: false, wall: false, [target] : !mode[target]});
+    }
+
     return value !== null && (<>
         <div className='a_s_head'>
             <img src="https://res.cloudinary.com/dxqmbhsis/image/upload/v1643654043/pathfinder/logo_jk8fyj.png"/>
@@ -45,9 +96,8 @@ export default function SideNav() {
         <div className='a_s_body'>
             <Dropdown label="nodes" icon={<LayersIcon/>} isOpen={isOpen} onClick={() => setIsOpen(!isOpen)}>
                 <div className='a_s_b_d_nodes'>
-                    <p>Start Node</p>
-                    <p>Finish Node</p>
-                    <p style={{marginBottom: 0}}>Wall Node</p>
+                    <p style={{background: mode.start && colors.start, color: mode.start && '#fff'}} onClick={() => updateMode('start')}>Start Node</p>
+                    <p style={{background: mode.finish && colors.finish, color: mode.finish && '#fff'}} onClick={() => updateMode('finish')}>Finish Node</p>
                 </div>
             </Dropdown>
             <Dropdown label="speed" icon={<BoltIcon/>} isOpen={speedToggled} onClick={() => setSpeedToggled(!speedToggled)}>
@@ -150,3 +200,8 @@ const Dropdown = ({icon, label, isOpen, onClick, children}) => {
     )
 }
   
+
+function hexToRgb(hex) {
+    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result ? `rgb(${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)})` : null;
+  }

@@ -8,26 +8,13 @@ import { styled } from '@mui/material/styles';
 import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
 
-const DEFAULT_START_NODE = {col: 30, row: 12}
-const DEFAULT_FINISH_NODE = {col: 10, row: 8}
-
-const delta = 6;
-let startX;
-let startY;
-
 function Board() {
-  const [board, setBoard] = useState([]);
-  const [startNode, setStartNode] = useState(DEFAULT_START_NODE)
-  const [finishNode, setFinishNode] = useState(DEFAULT_FINISH_NODE)
   const [dimensions, setDimensions] = useState({});
   const [mouseDown, setMouseDown] = useState(false);
-  const [isDragStart, setDragStart] = useState(false);
-  const [isDragFinish, setDragFinish] = useState(false);
-  const [previousNode, setPreviousNode] = useState({});
   const [success, setSuccess] = useState(false);
   const [isResetting, setIsResetting] = useState(false);
 
-  const {speed, setIsAnimating, isAnimating, colors} = useGlobalContext();
+  const {setIsProcessingMode, board, setBoard, speed, setIsAnimating, isAnimating, colors, mode, setMode, previousNode, setPreviousNode, startNode, setStartNode, finishNode, setFinishNode} = useGlobalContext();
 
   useEffect(() => {
     const {rows, cols} = fetchDimensions();
@@ -42,7 +29,30 @@ function Board() {
       window.removeEventListener("mousedown", handleMouseDown)
       window.removeEventListener("mouseup", handleMouseUp);
     }
-  }, [])
+  }, []);
+
+  useEffect(() => {
+    if(mode.start || mode.finish || mode.wall) {
+      handleMode();
+    }
+  }, [mode]);
+
+
+  const handleMode = () => {
+    //reset previous node
+    setPreviousNode(null);
+
+    //clear start node
+    if(mode.start) {
+      const domEl = document.getElementById(`node-${startNode.row}-${startNode.col}`);
+      domEl.style.backgroundColor = '#181818';
+    }
+    //clear finish node
+    if(mode.finish) {
+      const domEl = document.getElementById(`node-${finishNode.row}-${finishNode.col}`);
+      domEl.style.backgroundColor = '#181818';
+    }
+  }
 
   const fetchDimensions = () => {
     const domEl = document.getElementById("board-wrap")
@@ -110,112 +120,93 @@ function Board() {
   }
 
   const updateNode = (target) => {
+    if(isAnimating) {
+      return;
+    }
     const {isStart, isWall, isFinish, row, col} = target;
     const domEl = document.getElementById(`node-${row}-${col}`);
-    if(isStart && !isDragFinish) {
-      setDragStart(true)
-      setPreviousNode(domEl)
-      return;
-    }
 
-    if(isFinish && !isDragStart) {
-      setDragFinish(true);
-      setPreviousNode(domEl);
-      return;
-    }
+    //if user clicks on start mode
+    if(mode.start) {
+      setIsProcessingMode(true);
+      if(isFinish || isWall) {
+        return;
+      }
+      //update start node
+      setStartNode({col, row});
+      domEl.style.backgroundColor = colors.start;
+      setMode({...mode, start: false});
 
-    
-    if(isDragStart) {
-      domEl.style.backgroundColor = colors.start
+      //update start node in board state
+      let updatedBoard = [];
+
+      board.forEach((tempRow, index, array) => {
+        let updatedRow = [];
+        tempRow.forEach((node) => {
+          if(node.isStart) {
+            node.isStart = false
+          }
+          if(node.col === col && node.row === row) {
+            node.isStart = true
+          }
+          updatedRow.push(node);
+        });
+        updatedBoard.push(updatedRow);
+      });
+
+      setBoard(updatedBoard)
+
       setTimeout(() => {
-        previousNode.style.backgroundColor = '#181818';
-      }, 500);
-      setPreviousNode(domEl);
+        setIsProcessingMode(false);
+      }, 1500);
       return;
     }
 
-    if(isDragFinish) {
+    //if user clicks on finish mode
+    if(mode.finish) {
+      setIsProcessingMode(true);
+      if(isStart || isWall) {
+        return;
+      }
+      //update start node
+      setFinishNode({col, row});
       domEl.style.backgroundColor = colors.finish;
+      setMode({...mode, finish: false});
+
+      //update start node in board state
+      let updatedBoard = [];
+
+      board.forEach((tempRow) => {
+        let updatedRow = [];
+        tempRow.forEach((node) => {
+          if(node.isFinish) {
+            node.isFinish = false
+          }
+          if(node.col === col && node.row === row) {
+            node.isFinish = true
+          }
+          updatedRow.push(node);
+        });
+        updatedBoard.push(updatedRow);
+      });
+
+      setBoard(updatedBoard)
+
       setTimeout(() => {
-        previousNode.style.backgroundColor = '#181818';
-      }, 500);
-      setPreviousNode(domEl);
+        setIsProcessingMode(false);
+      }, 1500);
+
       return;
     }
+
+    if(isStart || isFinish) {
+      return;
+    }
+
 
     if(!isWall) {
       target.isWall = true;
       domEl.style.backgroundColor = colors.wall
-    }
-  }
-
-  const onDragEnd =(evt, target) => {
-
-    //check to see whether user dragged
-    const diffX = Math.abs(evt.pageX - startX);
-    const diffY = Math.abs(evt.pageY - startY);
-  
-    if (diffX < delta && diffY < delta) {
-      //if user clicks
-      return;
-    } 
-
-    const {row, col, isWall, isStart, isFinish} = target;
-    const previousStartNode = board[startNode.row][startNode.col];
-    const previousFinishNode = board[finishNode.row][finishNode.col];
-
-    const startDomEl = document.getElementById(`node-${startNode.row}-${startNode.col}`);
-    const finishDomEl = document.getElementById(`node-${finishNode.row}-${finishNode.col}`);
-
-    //do nothing if target is a wall
-    if(isWall) {
-      if(isDragStart) {
-        setTimeout(() => {
-          startDomEl.classList.add("node-start")
-        }, 500);
-      }
-      if(isDragFinish) {
-        setTimeout(() => {
-          finishDomEl.classList.add("node-finish")
-        }, 500);
-      }
-      return;
-    }
-
-    //update new start node
-    if(isDragStart) {
-      //if user lands on the finish node
-      if(isFinish) {
-        setTimeout(() => {
-          startDomEl.classList.add("node-start");
-          previousNode.classList.remove('node-start')
-        }, 500);
-        setPreviousNode(null);
-        setDragStart(false);
-        return;
-      }
-      previousStartNode.isStart = false;
-      target.isStart = true;
-      setStartNode({col, row})
-      setDragStart(false);
-    }
-
-    //update new finish node
-    if(isDragFinish) {
-      //if user lands on start node
-      if(isStart) {
-        setTimeout(() => {
-          finishDomEl.classList.add('node-finish')
-          previousNode.classList.remove('node-finish')
-        }, 500);
-        setPreviousNode(null)
-        setDragFinish(false);
-        return;
-      }
-      previousFinishNode.isFinish = false;
-      target.isFinish = true;
-      setFinishNode({col, row})
-      setDragFinish(false);
     }
   }
 
@@ -226,7 +217,7 @@ function Board() {
         {board && board.map((row, idx) => {
           return <tr key={`row-${idx}`}>
             {row.map((node) => {
-              return <Node onDragEnd={onDragEnd} mouseDown={mouseDown} updateNode={updateNode} key={`node-${node.row}-${node.col}`} node={node} />
+              return <Node mouseDown={mouseDown} updateNode={updateNode} key={`node-${node.row}-${node.col}`} node={node} />
             })}
             </tr>
         })}
