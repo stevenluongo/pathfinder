@@ -3,19 +3,17 @@ import Node from './node';
 import { dijkstra, getNodesInOrder } from '../algorithms/dijkstra';
 import { visualizeDijkstra, visualizePath, generateBoard } from '../lib/board';
 import { useGlobalContext } from '../context/global-context';
+import LoadingButton from '@mui/lab/LoadingButton';
+import { styled } from '@mui/material/styles';
+import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
+import RestartAltIcon from '@mui/icons-material/RestartAlt';
 
-const DEFAULT_COLS = 50;
-const DEFAULT_ROWS = 20;
 const DEFAULT_START_NODE = {col: 30, row: 12}
 const DEFAULT_FINISH_NODE = {col: 10, row: 8}
-const BOARD_DEFAULTS = {
-  DEFAULT_COLS, DEFAULT_ROWS, DEFAULT_START_NODE, DEFAULT_FINISH_NODE
-}
 
 const delta = 6;
 let startX;
 let startY;
-
 
 function Board() {
   const [board, setBoard] = useState([]);
@@ -26,14 +24,14 @@ function Board() {
   const [isDragStart, setDragStart] = useState(false);
   const [isDragFinish, setDragFinish] = useState(false);
   const [previousNode, setPreviousNode] = useState({});
-  const [boardWidth, setBoardWidth] = useState(0);
+  const [success, setSuccess] = useState(false);
+  const [isResetting, setIsResetting] = useState(false);
 
-  const {speed, setIsAnimating} = useGlobalContext();
+  const {speed, setIsAnimating, isAnimating} = useGlobalContext();
 
   useEffect(() => {
-    const {rows, cols, availableWidth} = fetchDimensions();
+    const {rows, cols} = fetchDimensions();
     const board = generateBoard(cols, rows, startNode, finishNode);
-    setBoardWidth(availableWidth);
 
     setDimensions({rows, cols});
     setBoard(board)
@@ -86,20 +84,29 @@ function Board() {
     setTimeout(async() => {
       await visualizePath(nodesInOrder)
       setIsAnimating(false);  
+      setSuccess(true)
     }, 250);
 
   }
 
   const resetBoard = () => {
+    if(isResetting) {
+      return;
+    }
+    setIsResetting(true);
     const visitedNodes = Array.from(document.getElementsByClassName("node-visited"));
     visitedNodes.forEach((node, idx) => {
       setTimeout(() => {
           node.classList.contains("node-path") && node.classList.remove('node-path');
           node.classList.remove("node-visited")
-      }, 3 * idx);
+      }, 1 * idx);
     });
-    const board = generateBoard(BOARD_DEFAULTS);
-    setBoard(board)
+    setTimeout(() => {
+      const board = generateBoard(dimensions.cols, dimensions.rows, startNode, finishNode);
+      setBoard(board)
+      setSuccess(false);
+      setIsResetting(false);
+    }, 1 * visitedNodes.length);
   }
 
   const updateNode = (target) => {
@@ -225,9 +232,36 @@ function Board() {
         })}
         </tbody>
       </table>
-        <button className='visualize' onClick={handleDikjstra}>visualize</button>
+        <VisualizeButton
+          className='visualize'
+          onClick={success ? resetBoard : handleDikjstra}
+          endIcon={success ? <RestartAltIcon/> : <AutoFixHighIcon />}
+          loading={isAnimating || isResetting}
+          loadingPosition="end"
+          variant="contained"
+      >
+        {isAnimating ? 'animating ...' : success ? isResetting ? 'resetting ...' :'Reset' : 'Visualize'}
+      </VisualizeButton>
     </div>
   )
 }
 
 export default Board;
+
+
+
+const VisualizeButton = styled(LoadingButton)({
+  color: '#cfc4ff',
+  backgroundColor: '#3f22c0',
+  '&:hover': {
+    backgroundColor: '#341ba1',
+    borderColor: '#0062cc',
+    boxShadow: 'none',
+  },
+  '&:disabled': {
+    boxShadow: 'none',
+    backgroundColor: '#331e91',
+    borderColor: '#005cbf',
+    color: '#6048ca'
+  },
+})
