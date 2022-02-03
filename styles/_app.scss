@@ -17,6 +17,7 @@
         width: calc(100% - 4px);
         background-color: #1d1d1d;
         border-bottom-left-radius: 5px;
+        position: relative;
 
     }
     .app_content {
@@ -189,5 +190,22 @@
     background-color: #292929;
     svg {
         color: #cfcfcf !important;
+    }
+}
+
+.app_topbar_end {
+    position: absolute;
+    right: 1rem;
+    .a_t_e_button {
+        height: 24 !important;
+        padding-top: 8px !important;
+        padding-bottom: 8px !important;
+        margin-left: 1rem !important;
+        background-color: #292929;
+        text-transform: inherit !important;
+        font-family: "Inter" !important;
+        svg {
+            color: #cfcfcf !important;
+        }
     }
 }

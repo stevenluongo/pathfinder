@@ -7,7 +7,10 @@ import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import { useGlobalContext } from '../context/global-context';
 import LoadingButton from '@mui/lab/LoadingButton';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
-
+import Button from '@mui/material/Button';
+import DeleteIcon from '@mui/icons-material/Delete';
+import SendIcon from '@mui/icons-material/Send';
+import CodeIcon from '@mui/icons-material/Code';
 export default function TopNav() {
     const [algorithm, setAlgorithm] = useState(10);
     const {isResetting, resetBoard, isAnimating} = useGlobalContext();
@@ -35,9 +38,14 @@ export default function TopNav() {
           loadingPosition="end"
           variant="contained"
           disabled={isAnimating}
-      >
-        {isResetting ? 'resetting ...' : 'Reset'}
-      </VisualizeButton>
+        >
+          {isResetting ? 'resetting ...' : 'Reset'}
+        </VisualizeButton>
+        <div className='app_topbar_end'>
+        <Button target="_blank" href="https://github.com/binolt/pathfinder" className='a_t_e_button' variant="contained" endIcon={<CodeIcon />}>
+          View Code
+        </Button>
+        </div>
         </div>
     );
 }

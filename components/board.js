@@ -236,15 +236,9 @@ const VisualizeButton = styled(LoadingButton)({
   color: '#cfc4ff',
   backgroundColor: '#3f22c0',
   '&:hover': {
-    backgroundColor: '#341ba1',
-    borderColor: '#0062cc',
-    boxShadow: 'none',
+    backgroundColor: 'transparent',
   },
   '&:disabled': {
-    boxShadow: 'none',
-    backgroundColor: '#331e91',
-    borderColor: '#005cbf',
-    color: '#6048ca'
   },
 })
 

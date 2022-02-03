@@ -25,17 +25,50 @@
     height: 50px !important;
     border-radius: 3px !important;
     font-weight: 600 !important;
-    color: #fff !important;
     cursor: pointer !important;
     transition: transform 0.35s ease, background-color 0.5s ease !important;
     text-transform: inherit !important;
     font-family: "Inter" !important;
-    color: #cfc4ff !important;
-    svg {
-      color: #cfc4ff!important;
+    padding: 1em !important;
+    outline: none !important;
+    color: #e1cef1 !important;
+    font-weight: 900 !important;
+    font-style: 1.2em !important;
+    z-index: 1 !important;
+    cursor: pointer !important;
+    background: none !important;
+    text-shadow: 3px 3px 10px rgba(0,0,0,.45) !important;
+    &:before, &:after {
+      position: absolute !important;
+      top: 50% !important;
+      left: 50% !important;
+      border-radius: 10em !important;
+      transform: translateX(-50%) translateY(-50%) !important;
+      width: 105% !important;
+      height: 105% !important;
+      content: '' !important;
+      z-index: -2 !important;
+      background-size: 400% 400% !important;
+      background: linear-gradient(60deg, #8c4eef, #382bf3) !important; 
+    }
+    &:before {
+      border-radius: 10em !important;
+
+      filter: blur(7px) !important;
+      transition: all .25s ease !important;
+      animation: pulse 10s infinite ease !important;
+    }
+    &:after {
+      filter: blur(0.3px) !important;
     }
     &:hover {
-      transform: translateY(-0.1rem) !important;
+      &:before {
+        width: 115% !important;
+        height: 115% !important;
+      }
+    }
+    svg {
+      color: #e1cef1 !important;
     }
   }
   
