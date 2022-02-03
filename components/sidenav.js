@@ -110,6 +110,9 @@ export default function SideNav() {
                 <ColorInput label="FINISH NODE COLOR" ref={finishRef} target="finish"/>
                 <ColorInput margin={0} label="WALL NODE COLOR" ref={wallRef} target="wall"/>
             </Dropdown>
+            <div className='a_s_b_credits'>
+                <p>Made with 💜 by <a target="_blank" href="https://github.com/binolt">steven</a></p>
+            </div>
         </div>
     </>);
 }

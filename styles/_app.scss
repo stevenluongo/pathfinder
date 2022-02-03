@@ -26,6 +26,7 @@
 }
 
 .app_sidebar {
+    position: relative;
     background-color: #1d1d1d;
     width: 100%;
     .a_s_head {
@@ -149,4 +150,24 @@
 
 .MuiSvgIcon-root {
     color: rgb(80, 80, 80);
+}
+
+
+.a_s_b_credits {
+    position: absolute;
+    bottom: 1rem;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    p {
+        font-size: 14px;
+        font-style: italic;
+        color: #696969;
+    }
+    a {
+        text-decoration: underline;
+        color: rgb(165, 165, 165);
+        font-weight: 500;
+        cursor: pointer;
+    }
 }
