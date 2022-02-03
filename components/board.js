@@ -27,7 +27,7 @@ function Board() {
   const [success, setSuccess] = useState(false);
   const [isResetting, setIsResetting] = useState(false);
 
-  const {speed, setIsAnimating, isAnimating} = useGlobalContext();
+  const {speed, setIsAnimating, isAnimating, colors} = useGlobalContext();
 
   useEffect(() => {
     const {rows, cols} = fetchDimensions();
@@ -126,18 +126,18 @@ function Board() {
 
     
     if(isDragStart) {
-      domEl.classList.add("node-start")
+      domEl.style.backgroundColor = colors.start
       setTimeout(() => {
-        previousNode.classList.remove("node-start")
+        previousNode.style.backgroundColor = '#181818';
       }, 500);
       setPreviousNode(domEl);
       return;
     }
 
     if(isDragFinish) {
-      domEl.classList.add("node-finish")
+      domEl.style.backgroundColor = colors.finish;
       setTimeout(() => {
-        previousNode.classList.remove("node-finish")
+        previousNode.style.backgroundColor = '#181818';
       }, 500);
       setPreviousNode(domEl);
       return;
@@ -145,7 +145,7 @@ function Board() {
 
     if(!isWall) {
       target.isWall = true;
-      domEl.classList.add("node-wall");
+      domEl.style.backgroundColor = colors.wall
     }
   }
 
