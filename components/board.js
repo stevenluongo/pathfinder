@@ -9,12 +9,9 @@ import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
 
 function Board() {
-  const [dimensions, setDimensions] = useState({});
   const [mouseDown, setMouseDown] = useState(false);
-  const [success, setSuccess] = useState(false);
-  const [isResetting, setIsResetting] = useState(false);
 
-  const {setIsProcessingMode, board, setBoard, speed, setIsAnimating, isAnimating, colors, mode, setMode, setPreviousNode, startNode, setStartNode, finishNode, setFinishNode} = useGlobalContext();
+  const {resetBoard, success, setSuccess, dimensions, setDimensions, setIsResetting, isResetting, setIsProcessingMode, board, setBoard, speed, setIsAnimating, isAnimating, colors, mode, setMode, setPreviousNode, startNode, setStartNode, finishNode, setFinishNode} = useGlobalContext();
 
   useEffect(() => {
     const {rows, cols} = fetchDimensions();
@@ -111,30 +108,6 @@ function Board() {
       setSuccess(true)
     }, 250);
 
-  }
-
-  const resetBoard = () => {
-    if(isResetting) {
-      return;
-    }
-    setIsResetting(true);
-    const visitedNodes = Array.from(document.getElementsByClassName("node-visited"));
-    visitedNodes.forEach((node, idx) => {
-      setTimeout(() => {
-          node.classList.contains("node-path") && node.classList.remove('node-path');
-          node.classList.remove("node-visited")
-      }, 1 * idx);
-    });
-    setTimeout(() => {
-      const tempStartNode = {col : randomIntFromInterval(1, dimensions.cols - 1), row : randomIntFromInterval(1, dimensions.rows - 1)};
-      const tempFinishNode = {col : randomIntFromInterval(1, dimensions.cols - 1), row : randomIntFromInterval(1, dimensions.rows - 1)};
-      const board = generateBoard(dimensions.cols, dimensions.rows, tempStartNode, tempFinishNode);
-      setStartNode(tempStartNode);
-      setFinishNode(tempFinishNode)
-      setBoard(board)
-      setSuccess(false);
-      setIsResetting(false);
-    }, 1 * visitedNodes.length);
   }
 
   const updateNode = (target) => {

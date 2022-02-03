@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from 'react';
-import { useGlobalContext } from '../context/global-context';
+import React from 'react';
 import Board from './board';
 import SideNav from './sidenav';
 import TopNav from './topnav';

@@ -4,9 +4,13 @@ import { useState } from 'react';
 import { styled } from '@mui/material/styles';
 import InputBase from '@mui/material/InputBase';
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
+import { useGlobalContext } from '../context/global-context';
+import LoadingButton from '@mui/lab/LoadingButton';
+import RestartAltIcon from '@mui/icons-material/RestartAlt';
 
 export default function TopNav() {
     const [algorithm, setAlgorithm] = useState(10);
+    const {isResetting, resetBoard, isAnimating} = useGlobalContext();
 
     const handleChange = (event) => {
         setAlgorithm(event.target.value);
@@ -23,6 +27,17 @@ export default function TopNav() {
         >
           <MenuItem style={{display: 'flex', alignItems: 'center'}} value={10}><AutoAwesomeIcon style={{marginRight: '.5rem', fontSize: '1.3em'}}/>Dijkstra</MenuItem>
         </Select>
+        <VisualizeButton
+          onClick={resetBoard}
+          className="reset_button"
+          endIcon={<RestartAltIcon/> }
+          loading={isResetting}
+          loadingPosition="end"
+          variant="contained"
+          disabled={isAnimating}
+      >
+        {isResetting ? 'resetting ...' : 'Reset'}
+      </VisualizeButton>
         </div>
     );
 }
@@ -32,9 +47,11 @@ const BootstrapInput = styled(InputBase)(({ theme }) => ({
       marginTop: theme.spacing(3),
     },
     '& .MuiInputBase-input': {
+      boxShadow: '0px 3px 1px -2px rgb(0 0 0 / 20%), 0px 2px 2px 0px rgb(0 0 0 / 14%), 0px 1px 5px 0px rgb(0 0 0 / 12%)',
       borderRadius: 4,
       position: 'relative',
       display: 'flex',
+      height: 24,
       alignItems: 'center',
       backgroundColor: '#292929',
       border: '1px solid #292929',
@@ -62,3 +79,17 @@ const BootstrapInput = styled(InputBase)(({ theme }) => ({
       },
     },
   }));
+
+  const VisualizeButton = styled(LoadingButton)({
+    color: '#fff',
+    backgroundColor: '#3f22c0',
+    '&:hover': {
+      backgroundColor: '#414141',
+      borderColor: '#0062cc',
+      boxShadow: 'none',
+    },
+    '&:disabled': {
+      borderColor: '#005cbf',
+      color: '#6048ca'
+    },
+  })

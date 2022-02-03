@@ -171,3 +171,23 @@
         cursor: pointer;
     }
 }
+
+.reset_button {
+    border: 0 !important;
+    border-radius: 3px !important;
+    font-weight: 600 !important;
+    color: #fff !important;
+    cursor: pointer !important;
+    transition: background-color 0.5s ease !important;
+    text-transform: inherit !important;
+    font-family: "Inter" !important;
+    color: #cfcfcf !important;
+    height: 24 !important;
+    padding-top: 8px !important;
+    padding-bottom: 8px !important;
+    margin-left: 1rem !important;
+    background-color: #292929;
+    svg {
+        color: #cfcfcf !important;
+    }
+}
