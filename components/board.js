@@ -14,11 +14,20 @@ function Board() {
   const [success, setSuccess] = useState(false);
   const [isResetting, setIsResetting] = useState(false);
 
-  const {setIsProcessingMode, board, setBoard, speed, setIsAnimating, isAnimating, colors, mode, setMode, previousNode, setPreviousNode, startNode, setStartNode, finishNode, setFinishNode} = useGlobalContext();
+  const {setIsProcessingMode, board, setBoard, speed, setIsAnimating, isAnimating, colors, mode, setMode, setPreviousNode, startNode, setStartNode, finishNode, setFinishNode} = useGlobalContext();
 
   useEffect(() => {
     const {rows, cols} = fetchDimensions();
-    const board = generateBoard(cols, rows, startNode, finishNode);
+    
+    const tempStartNode = {col : randomIntFromInterval(1, cols - 1), row : randomIntFromInterval(1, rows - 1)};
+    const tempFinishNode = {col : randomIntFromInterval(1, cols - 1), row : randomIntFromInterval(1, rows - 1)};
+
+    setStartNode(tempStartNode);
+    setFinishNode(tempFinishNode)
+    
+    const board = generateBoard(cols, rows, tempStartNode, tempFinishNode);
+
+    console.log(cols, rows);
 
     setDimensions({rows, cols});
     setBoard(board)
@@ -117,7 +126,11 @@ function Board() {
       }, 1 * idx);
     });
     setTimeout(() => {
-      const board = generateBoard(dimensions.cols, dimensions.rows, startNode, finishNode);
+      const tempStartNode = {col : randomIntFromInterval(1, dimensions.cols - 1), row : randomIntFromInterval(1, dimensions.rows - 1)};
+      const tempFinishNode = {col : randomIntFromInterval(1, dimensions.cols - 1), row : randomIntFromInterval(1, dimensions.rows - 1)};
+      const board = generateBoard(dimensions.cols, dimensions.rows, tempStartNode, tempFinishNode);
+      setStartNode(tempStartNode);
+      setFinishNode(tempFinishNode)
       setBoard(board)
       setSuccess(false);
       setIsResetting(false);
@@ -261,3 +274,7 @@ const VisualizeButton = styled(LoadingButton)({
     color: '#6048ca'
   },
 })
+
+function randomIntFromInterval(min, max) { // min and max included 
+  return Math.floor(Math.random() * (max - min + 1) + min)
+}
