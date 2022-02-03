@@ -90,6 +90,9 @@ export const getNodesInOrder = (FINISH_NODE) => {
     let arr = [];
     let targetNode = FINISH_NODE.previousNode;
     arr.push(targetNode);
+    if(!targetNode) {
+        return;
+    }
     while(targetNode.previousNode !== undefined) {
         arr.push(targetNode.previousNode);
         targetNode = targetNode.previousNode;

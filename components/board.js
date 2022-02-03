@@ -91,6 +91,11 @@ function Board() {
     const visitedSet = await dijkstra(start, finish, board);
     await visualizeDijkstra(visitedSet, speed)
     const nodesInOrder = getNodesInOrder(finish);
+    if(!nodesInOrder) {
+      setIsAnimating(false);  
+      setSuccess(true)
+      return;
+    }
     setTimeout(async() => {
       await visualizePath(nodesInOrder)
       setIsAnimating(false);  
